@@ -7,14 +7,14 @@
 * Адаптивная верстка
 
 ## Запуск проекта
-1. Клонировать репозиторий
-git@github.com:elmanAliev/mesto-react.git
+1. Клонировать репозиторий:
+`git@github.com:elmanAliev/mesto-react.git`
 
-2. Установить зависимости
-npm install
+2. Установить зависимости:
+`npm install`
 
-3. Запуск проекта 
-npm start
+3. Запуск проекта:
+`npm start`
 
 
 
