@@ -10,15 +10,18 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState();
 
   const handleEditProfileClick = () => setIsEditProfilePopupOpen(true);
   const handleAddPlaceClick = () => setIsAddPlacePopupOpen(true); 
-  const handleEditAvatarClick = () => setIsEditAvatarPopupOpen(true); 
+  const handleEditAvatarClick = () => setIsEditAvatarPopupOpen(true);
+  const handleCardClick = (card) => setSelectedCard(card); 
 
   function closeAllPopups () {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    setSelectedCard();
   }
 
   useEffect(() => {
@@ -32,10 +35,11 @@ function App() {
   }, [])
   
   return (
-    <div classNameName="App">
+    <div className="App">
       <div className="root">
         <Header />
-        <Main          
+        <Main
+          onCardClick = {handleCardClick}          
           onEditProfile = {handleEditProfileClick}
           onAddPlace = {handleAddPlaceClick}
           onEditAvatar = {handleEditAvatarClick}
@@ -49,11 +53,29 @@ function App() {
           children = {
             <fieldset className="popup__info">
               <div className="popup__info-item">
-                <input id="name-input" className="popup__input popup__input_type_name" type="text" name="name" placeholder="Имя" value="Жак-Ив Кусто" minlength="2" maxlength="40" required />
+                <input 
+                  id="name-input" 
+                  className="popup__input popup__input_type_name" 
+                  type="text" 
+                  name="name" 
+                  placeholder="Имя" 
+                  minLength="2" 
+                  maxLength="40" 
+                  required 
+                />
                 <span className="name-input-error popup__input-error"></span>
               </div>
               <div className="popup__info-item">
-                <input id="job-input" className="popup__input popup__input_type_job" type="text" name="job" placeholder="Профессиональная деятельность" value="Исследователь океана" minlength="2" maxlength="200" required />
+                <input 
+                  id="job-input" 
+                  className="popup__input popup__input_type_job" 
+                  type="text" 
+                  name="job" 
+                  placeholder="Профессиональная деятельность" 
+                  minLength="2" 
+                  maxLength="200"
+                  required 
+                />
                 <span className="job-input-error popup__input-error"></span>
               </div>
             </fieldset>
@@ -67,11 +89,27 @@ function App() {
           children = {
             <fieldset className="popup__info">
               <div className="popup__info-item">
-                <input id="place-input" className="popup__input popup__input_type_place" type="text" name="place" placeholder="Название" minlength="2" maxlength="30" required />
+                <input 
+                  id="place-input" 
+                  className="popup__input popup__input_type_place" 
+                  type="text" 
+                  name="place" 
+                  placeholder="Название" 
+                  minLength="2" 
+                  maxLength="30" 
+                  required 
+                />
                 <span className="place-input-error popup__input-error"></span>
               </div>
               <div className="popup__info-item">
-                <input id="url-input" className="popup__input popup__input_type_url" type="url" name="url" placeholder="Ссылка на картинку" required />
+                <input 
+                  id="url-input" 
+                  className="popup__input popup__input_type_url" 
+                  type="url" 
+                  name="url" 
+                  placeholder="Ссылка на картинку" 
+                  required 
+                />
                 <span className="url-input-error popup__input-error"></span>
               </div>
             </fieldset>
@@ -91,13 +129,23 @@ function App() {
           children = {
             <fieldset className="popup__info">
               <div className="popup__info-item">
-                <input id="avatar-input" className="popup__input popup__input_type_url" type="url" name="url" placeholder="Ссылка на картинку" required />
+                <input 
+                  id="avatar-input" 
+                  className="popup__input popup__input_type_url" 
+                  type="url"
+                  name="url" 
+                  placeholder="Ссылка на картинку" 
+                  required 
+                />
                 <span className="avatar-input-error popup__input-error"></span>
               </div>
             </fieldset>
           }
         />
-        <ImagePopup />
+        <ImagePopup 
+          onClose = {closeAllPopups}
+          card = {selectedCard}
+        />
       </div>
     </div>
   );

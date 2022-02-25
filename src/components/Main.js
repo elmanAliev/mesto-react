@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../utils/Api';
 import Card from './Card';
 
-function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
+function Main({ onCardClick, onEditProfile, onAddPlace, onEditAvatar }) {
 
   const [userName, setUserName] = useState('Жак-Ив Кусто');
   const [userDescription, setUserDescription] = useState('Исследователь океана');
@@ -19,7 +19,6 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
       .catch((err) => {
           console.log(`Невозможно получить информацию о пользователе ${err}`);
       });
-
   }, [])
 
   useEffect(() => {
@@ -30,14 +29,12 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
       .catch((err) => {
           console.log(`Невозможно отобразить карточки с сервера ${err}`);
       })
-
   }, [])
 
   const elements = cards.map((card) => {
-    return <Card 
-              name = {card.name}
-              link = {card.link}
-              likes = {card.likes}
+    return <Card
+              onCardClick = {onCardClick}
+              card = {card}
               key = {card._id}
            />
   })
