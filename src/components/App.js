@@ -98,22 +98,7 @@ function App() {
           }
         />
         <ImagePopup />
-        
-
       </div>
-      <template id="element">
-        <div className="element">
-          <button className="element__trash" type="button"></button>
-          <img src="#" alt="" className="element__image" />
-          <div className="element__info">
-            <h2 className="element__name"></h2>
-            <div className="element__wrapper">
-              <button className="element__like" type="button"></button>
-              <span className="element__likes-number"></span>
-            </div>
-          </div>
-        </div>
-      </template>
     </div>
   );
 }
