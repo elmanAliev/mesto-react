@@ -4,53 +4,21 @@ import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 
-function Main({ onCardClick, onEditProfile, onAddPlace, onEditAvatar }) {
+function Main({cards, onCardLike, onCardDelete, onCardClick, onEditProfile, onAddPlace, onEditAvatar }) {
 
   const userInfo = React.useContext(CurrentUserContext);
-  const [cards, setCards] = useState([]);
-
-
-  useEffect(() => {
-    api.getInitialCards()
-      .then((cardsArray) => {
-        setCards(cardsArray);
-      })
-      .catch((err) => {
-          console.log(`Невозможно отобразить карточки с сервера ${err}`);
-      })
-  }, [])
 
   const elements = cards.map((card) => {
     return <Card
               onCardClick = {onCardClick}
-              onCardLike = {handleCardLike}
-              onCardDelete = {handleCardDelete}
+              onCardLike = {onCardLike}
+              onCardDelete = {onCardDelete}
               card = {card}
               key = {card._id}
            />
   });
 
-  function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === userInfo._id);
-    
-    isLiked 
-      ? api.deleteLikeCard(card._id)
-        .then((newCard) => {
-          setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-        })
-      : api.putLikeCard(card._id)
-        .then((newCard) => {
-          setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-        })
-  } 
-
-  function handleCardDelete (card) {
-    api.deleteCard(card._id)
-      .then(() => {
-        setCards((state) => state.filter((c) => c._id !== card._id));
-      })
-
-  }
+  
 
   return (
     <main className="content">

@@ -8,6 +8,7 @@ import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
+  const [cards, setCards] = useState([]);
 
   const handleEditProfileClick = () => setIsEditProfilePopupOpen(true);
   const handleAddPlaceClick = () => setIsAddPlacePopupOpen(true);
@@ -39,6 +41,15 @@ function App() {
     return () => document.removeEventListener('keydown', handleEscapeKey)
   }, [])
 
+  useEffect(() => {
+    api.getInitialCards()
+      .then((cardsArray) => {
+        setCards(cardsArray);
+      })
+      .catch((err) => {
+          console.log(`Невозможно отобразить карточки с сервера ${err}`);
+      })
+  }, [])
 
   useEffect(() => {
     api.getUserInfo()
@@ -73,12 +84,56 @@ function App() {
       })
   }
 
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    
+    isLiked 
+      ? api.deleteLikeCard(card._id)
+        .then((newCard) => {
+          setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        })
+        .catch((err) => {
+          console.log(`Ошибка: ${err}`);
+        })
+      : api.putLikeCard(card._id)
+        .then((newCard) => {
+          setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        })
+        .catch((err) => {
+          console.log(`Ошибка: ${err}`);
+        })
+  } 
+
+  function handleCardDelete (card) {
+    api.deleteCard(card._id)
+      .then(() => {
+        setCards((state) => state.filter((c) => c._id !== card._id));
+      })
+      .catch((err) => {
+        console.log(`Невозможно удалить карточку: ${err}`);
+      })
+  }
+
+  function handleAddPlace(card) {
+    api.postNewCard(card)
+      .then((card) => {
+        setCards([card, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(`Невозможно добавить карточку: ${err}`);
+      })
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <div className="root">
           <Header />
           <Main
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
             onCardClick={handleCardClick}
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
@@ -90,39 +145,10 @@ function App() {
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}
           />
-          <PopupWithForm
-            onClose={closeAllPopups}
+          <AddPlacePopup 
             isOpen={isAddPlacePopupOpen}
-            name="add"
-            title="Новое место"
-            children={
-              <fieldset className="popup__info">
-                <div className="popup__info-item">
-                  <input
-                    id="place-input"
-                    className="popup__input popup__input_type_place"
-                    type="text"
-                    name="place"
-                    placeholder="Название"
-                    minLength="2"
-                    maxLength="30"
-                    required
-                  />
-                  <span className="place-input-error popup__input-error"></span>
-                </div>
-                <div className="popup__info-item">
-                  <input
-                    id="url-input"
-                    className="popup__input popup__input_type_url"
-                    type="url"
-                    name="url"
-                    placeholder="Ссылка на картинку"
-                    required
-                  />
-                  <span className="url-input-error popup__input-error"></span>
-                </div>
-              </fieldset>
-            }
+            onClose={closeAllPopups}
+            onAddPlace={handleAddPlace}
           />
           <PopupWithForm
             onClose={closeAllPopups}
