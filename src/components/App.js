@@ -7,6 +7,7 @@ import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
 
 function App() {
 
@@ -52,6 +53,17 @@ function App() {
 
   function handleUpdateUser(data) {
     api.patchUserInfo(data)
+      .then((userInfoObject) => {
+        setCurrentUser(userInfoObject)
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(`Невозможно загрузить данные на сервер ${err}`);
+      })
+  }
+
+  function handleUpdateAvatar(data) {
+    api.patchAvatar(data.avatar)
       .then((userInfoObject) => {
         setCurrentUser(userInfoObject)
         closeAllPopups();
@@ -118,26 +130,10 @@ function App() {
             title="Вы уверены"
             children={<></>}
           />
-          <PopupWithForm
-            onClose={closeAllPopups}
+          <EditAvatarPopup 
             isOpen={isEditAvatarPopupOpen}
-            name="avatar"
-            title="Обновить аватар"
-            children={
-              <fieldset className="popup__info">
-                <div className="popup__info-item">
-                  <input
-                    id="avatar-input"
-                    className="popup__input popup__input_type_url"
-                    type="url"
-                    name="url"
-                    placeholder="Ссылка на картинку"
-                    required
-                  />
-                  <span className="avatar-input-error popup__input-error"></span>
-                </div>
-              </fieldset>
-            }
+            onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
           />
           <ImagePopup
             onClose={closeAllPopups}
