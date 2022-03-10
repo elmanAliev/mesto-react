@@ -22,6 +22,11 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
         });
     } 
 
+    useEffect(() => {
+        setPlace('');
+        setUrl('')
+    }, [isOpen]); 
+
     return (
         <PopupWithForm
             onSubmit={handleSubmit}
