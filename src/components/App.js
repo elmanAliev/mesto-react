@@ -55,7 +55,6 @@ function App() {
     api.getUserInfo()
       .then((userInfoObject) => {
         setCurrentUser(userInfoObject)
-        console.log(userInfoObject)
       })
       .catch((err) => {
         console.log(`Невозможно получить информацию о пользователе ${err}`);
