@@ -11,7 +11,6 @@
 * CSS
 * JavaScript
 * REST API
-* Webpack
 
 ## Запуск проекта
 
