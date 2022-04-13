@@ -5,6 +5,9 @@
 
 **Тема: Интерфейсы с использованием React**
 
+## Страница проекта
+https://elmanaliev.github.io/mesto-react/
+
 ## В проекте применяется
 * React
 * HTML
